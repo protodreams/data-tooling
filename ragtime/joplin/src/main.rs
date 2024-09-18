@@ -53,7 +53,7 @@ async fn main()-> Result<()> {
         Err(e) => {
             eprintln!("Error drop table {}", e);
             Err(e)
-        }
+        }   
     }?;
 
     Ok(())
@@ -87,7 +87,7 @@ fn create_some_records() -> Result<impl IntoArrow> {
             DataType::FixedSizeList(  
                 Arc::new(Field::new("item", DataType::Float32, true)),
                 DIM as i32,
-            ),
+            ), 
             true,
         ),
     ]));
