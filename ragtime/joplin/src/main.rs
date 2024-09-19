@@ -74,7 +74,25 @@ async fn open_with_existing_tbl() -> Result<()> {
     };
     
     Ok(())
+}  
+
+fn create_record_batch_iterator(schema: Arc<Schema>) -> Result<Box<dyn Iterator<Item = Result<RecordBatch, ArrowError>>>, ArrowError>  {
+        let record_batch = RecordBatch::try_new( 
+                schema.clone(),
+                vec![
+                    Arc::new(Int32Array::from_iter_values(0..TOTAL as i32)),
+                    Arc::new( 
+                        FixedSizeListArray::from_iter_primitive::<Float32Type>(
+                            (0..TOTAL).map(|_| vec![1.0; DIM]),
+                        )),
+                ],
+            )?;
+        
+        let batches = RecordBatchIterator::new(vec![record_batch].into_iter().map(Ok), schema);
+        Ok(Box::new(batches))
 }
+
+
 
 fn create_some_records() -> Result<impl IntoArrow> {
     const TOTAL: usize = 1000;
@@ -91,22 +109,6 @@ fn create_some_records() -> Result<impl IntoArrow> {
             true,
         ),
     ]));
-
-    fn create_record_batch_iterator(schema: Arc<Schema>) -> Result<Box<dyn Iterator<Item = Result<RecordBatch, ArrowError>>>, ArrowError>  {
-        let record_batch = RecordBatch::try_new( 
-                schema.clone(),
-                vec![
-                    Arc::new(Int32Array::from_iter_values(0..TOTAL as i32)),
-                    Arc::new( 
-                        FixedSizeListArray::from_iter_primitive::<Float32Type, _, _>(
-                            (0..TOTAL).map(|_| vec![1.0; DIM]),
-                        )),
-                ],
-            )?;
-        
-        let batches = RecordBatchIterator::new(vec![record_batch].into_iter().map(Ok), schema);
-        Ok(Box::new(batches))
-    }
 
     let batches = create_record_batch_iterator(schema)?;
     Ok(batches)
