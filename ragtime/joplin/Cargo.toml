@@ -38,5 +38,5 @@ serde = "1.0.210"
 serde_json = "1.0.128"
 serde_with = "3.9.0"
 tokenizers = "0.20.0"
-tokio = "1.40.0"
+tokio = { version = "1.40.0", features = ["full"] }
 url = "2.5.2"

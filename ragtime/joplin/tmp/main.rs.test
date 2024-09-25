@@ -84,8 +84,7 @@ fn create_record_batch_iterator(schema: Arc<Schema>) -> Result<Box<dyn Iterator<
                     Arc::new( 
                         FixedSizeListArray::from_iter_primitive::<Float32Type>(
                             (0..TOTAL).map(|_| vec![1.0; DIM]),
-                        )),
-                ],
+                        )), ],
             )?;
         
         let batches = RecordBatchIterator::new(vec![record_batch].into_iter().map(Ok), schema);
